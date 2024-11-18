@@ -50,8 +50,9 @@ def about():
 @app.route('/search', methods=['GET'])
 def search():
     search_query = request.args.get('query', '').lower()
+    print(1)
     books_data = pd.read_csv('/Users/jigyasaverma/Desktop/Book Recommendation System/Book Recommendation System/archive/Books.csv')
-
+    print(2)
     # Filter books based on the search query
     filtered_books = books_data[books_data['Book-Title'].str.contains(search_query, case=False, na=False) |
                                 books_data['Book-Author'].str.contains(search_query, case=False, na=False) |

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
+
 path = kagglehub.dataset_download("arashnic/book-recommendation-dataset")
 print("Path to dataset files:", path)
 
