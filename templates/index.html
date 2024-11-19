@@ -134,21 +134,23 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <span class="navbar-brand">MY BOOK RECOMMENDATION SYSTEM</span>
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/recommend">Recommend</a></li>
-            <li><a href="/about">About</a></li>
-        </ul>
-    </nav>
-    <div class="search-container">
-        <form method="GET" action="/search">
-            <input type="text" name="query" id="search-bar" placeholder="Search for a book..." value="{{ request.args.get('query', '') }}">
-            <button type="submit">Search</button>
-        </form>
-    </div>
+    <!-- Navbar -->
+<nav class="navbar">
+    <span class="navbar-brand">MY BOOK RECOMMENDATION SYSTEM</span>
+    <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/recommend">Recommend</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</nav>
 
+<!-- Search Container -->
+<div class="search-container">
+    <form method="GET" action="/search">
+        <input type="text" name="query" id="search-bar" placeholder="Search for a book..." value="{{ request.args.get('query', '') }}">
+        <button type="submit">Search</button>
+    </form>
+</div>
 
     <!-- Content -->
     <div class="container">
@@ -174,6 +176,34 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- Search Results Section -->
+{% if book_name and book_name|length > 0 %}
+<div class="container">
+    <h3 class="title">Search Result</h3>
+    <div class="row">
+        {% for i in range(book_name|length) %}
+        <div class="col-md-3 col-sm-6 col-xs-12" style="margin-top:20px;">
+            <div class="card">
+                <div class="card-body">
+                    <img class="card-img-top" src="{{ image[i] }}" alt="Book Cover">
+                    <p class="text-white"><strong>{{ book_name[i] }}</strong></p> <!-- Book Name -->
+                    <p class="text-white"><em>Author: {{ author[i] }}</em></p> <!-- Book Author -->
+                    <p class="text-white">Votes: {{ votes[i] }}</p> <!-- Votes -->
+                    <p class="text-white">Rating: {{ rating[i] }}</p> <!-- Rating -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <p class="alert alert-warning text-center">No books found. Try searching with a different keyword!</p>
+</div>
+{% endif %}
+
+
 
     <!-- Footer -->
     <footer>

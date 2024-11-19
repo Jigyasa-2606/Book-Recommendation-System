@@ -7,6 +7,7 @@ popular_df = pickle.load(open('popular.pkl','rb'))
 pt = pickle.load(open('pt.pkl','rb'))
 books = pickle.load(open('books.pkl','rb'))
 similarity_score = pickle.load(open('similarity_score.pkl','rb'))
+searchdf= pickle.load(open('searchdf.pkl','rb'))
 
 app = Flask(__name__)
 @app.route('/')
@@ -18,6 +19,7 @@ def index():
                            votes=list(popular_df['num_ratings'].values),
                            rating=list(popular_df['avg_ratings'].values)
                            )
+
 @app.route('/recommend')
 def recommend_ui():
     return render_template('recommend.html')
@@ -49,18 +51,27 @@ def about():
 
 @app.route('/search', methods=['GET'])
 def search():
-    search_query = request.args.get('query', '').lower()
-    print(1)
-    books_data = pd.read_csv('/Users/jigyasaverma/Desktop/Book Recommendation System/Book Recommendation System/archive/Books.csv')
-    print(2)
-    # Filter books based on the search query
-    filtered_books = books_data[books_data['Book-Title'].str.contains(search_query, case=False, na=False) |
-                                books_data['Book-Author'].str.contains(search_query, case=False, na=False) |
-                                books_data['Year-Of-Publication'].astype(str).str.contains(search_query)]
+    query = request.args.get('query')  # Get the search query
+    if not query:
+        return render_template('index.html', data=[], message="Please enter a search term.")
 
-    # Convert filtered books to a list of dictionaries
-    books = filtered_books.to_dict(orient='records')
-    return render_template('index.html', books=books)
+    # Filter for books with titles matching the query
+    filtered_books = searchdf[searchdf['Book-Title'].str.contains(query, case=False, na=False)]
+
+    if filtered_books.empty:
+        return render_template('index.html', data=[], message="No results found for your search.")
+
+    # Select the first matching book (or all matches if desired)
+    selected_books = filtered_books.head(1)  # Only the first match
+
+    # Extract required fields for display
+    book_name = selected_books['Book-Title'].tolist()
+    author = selected_books['Book-Author'].tolist()
+    image = selected_books['Image-URL-M'].tolist()
+    votes = selected_books['Book-Rating'].tolist()
+    rating = [f"{rating:.1f}" for rating in votes]  # Format ratings
+
+    return render_template('index.html', book_name=book_name, author=author, image=image, votes=votes, rating=rating)
 
 
 if __name__ =='__main__':
