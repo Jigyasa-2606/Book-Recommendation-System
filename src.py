@@ -216,7 +216,6 @@ print(pt)
 similarity_score = cosine_similarity(pt)
 
 
-
 pt = final_ratings.pivot_table(index='Book-Title', columns='User-ID', values='Book-Rating')
 pt.fillna(0, inplace=True)
 
@@ -314,8 +313,6 @@ filtered_y_pred = [pred for pred in y_pred if pred != -1]
 print(classification_report(filtered_y_true, filtered_y_pred))
 
 
-
-
 train_ratings, test_ratings = train_test_split(ratings_with_name, test_size=0.2, random_state=42)
 train_num_rating_df = train_ratings.groupby('Book-Title').count()['Book-Rating'].reset_index()
 train_num_rating_df.rename(columns={'Book-Rating': 'num_ratings'}, inplace=True)
@@ -334,16 +331,16 @@ match_percentage = len(recommended_in_test) / len(recommended_books) * 100
 print(f"Recommended books that appear in the test set: {recommended_in_test}")
 print(f"Percentage of recommended books that match the test set: {match_percentage:.2f}%")
 
-searchdf = pd.merge(books, ratings, on="ISBN")
-searchdf = searchdf[['Book-Title', 'Book-Author', 'Image-URL-M', 'Book-Rating', 'ISBN']]
-print(searchdf.head())
+# searchdf = pd.merge(books, ratings, on="ISBN")
+# searchdf = searchdf[['Book-Title', 'Book-Author', 'Image-URL-M', 'Book-Rating', 'ISBN']]
+# print(searchdf.head())
 
 
 pickle.dump(popular_df,open('popular.pkl','wb'))
 pickle.dump(pt,open('pt.pkl','wb'))
 pickle.dump(books,open('books.pkl','wb'))
 pickle.dump(similarity_score,open('similarity_score.pkl','wb'))
-pickle.dump(searchdf,open('searchdf.pkl','wb'))
+# pickle.dump(searchdf,open('searchdf.pkl','wb'))
 
 
 

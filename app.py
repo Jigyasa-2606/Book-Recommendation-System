@@ -3,11 +3,13 @@ import pandas as pd
 from flask import Flask, render_template,request
 import pickle
 
+
+
 popular_df = pickle.load(open('popular.pkl','rb'))
 pt = pickle.load(open('pt.pkl','rb'))
 books = pickle.load(open('books.pkl','rb'))
 similarity_score = pickle.load(open('similarity_score.pkl','rb'))
-searchdf= pickle.load(open('searchdf.pkl','rb'))
+# searchdf = pickle.load(open('searchdf.pkl','rb'))
 
 app = Flask(__name__)
 @app.route('/')
@@ -49,29 +51,29 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('query')  # Get the search query
-    if not query:
-        return render_template('index.html', data=[], message="Please enter a search term.")
-
-    # Filter for books with titles matching the query
-    filtered_books = searchdf[searchdf['Book-Title'].str.contains(query, case=False, na=False)]
-
-    if filtered_books.empty:
-        return render_template('index.html', data=[], message="No results found for your search.")
-
-    # Select the first matching book (or all matches if desired)
-    selected_books = filtered_books.head(1)  # Only the first match
-
-    # Extract required fields for display
-    book_name = selected_books['Book-Title'].tolist()
-    author = selected_books['Book-Author'].tolist()
-    image = selected_books['Image-URL-M'].tolist()
-    votes = selected_books['Book-Rating'].tolist()
-    rating = [f"{rating:.1f}" for rating in votes]  # Format ratings
-
-    return render_template('index.html', book_name=book_name, author=author, image=image, votes=votes, rating=rating)
+# @app.route('/search', methods=['GET'])
+# def search():
+#     query = request.args.get('query')  # Get the search query
+#     if not query:
+#         return render_template('index.html', data=[], message="Please enter a search term.")
+#
+#     # Filter for books with titles matching the query
+#     filtered_books = searchdf[searchdf['Book-Title'].str.contains(query, case=False, na=False)]
+#
+#     if filtered_books.empty:
+#         return render_template('index.html', data=[], message="No results found for your search.")
+#
+#     # Select the first matching book (or all matches if desired)
+#     selected_books = filtered_books.head(1)  # Only the first match
+#
+#     # Extract required fields for display
+#     book_name = selected_books['Book-Title'].tolist()
+#     author = selected_books['Book-Author'].tolist()
+#     image = selected_books['Image-URL-M'].tolist()
+#     votes = selected_books['Book-Rating'].tolist()
+#     rating = [f"{rating:.1f}" for rating in votes]  # Format ratings
+#
+#     return render_template('index.html', book_name=book_name, author=author, image=image, votes=votes, rating=rating)
 
 
 if __name__ =='__main__':
